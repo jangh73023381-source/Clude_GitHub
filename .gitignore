@@ -13,3 +13,5 @@ current-holdings*
 .~lock*
 __pycache__/
 node_modules/
+# Claude Code 세션 도구(격리 worktree 등) — 프로젝트 콘텐츠 아님
+.claude/
