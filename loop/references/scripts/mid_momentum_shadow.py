@@ -43,6 +43,7 @@ REF = os.path.abspath(os.path.join(HERE, '..'))
 LOOP = os.path.abspath(os.path.join(REF, '..'))
 sys.path.insert(0, LOOP)
 import kiwoom_api as k  # noqa: E402
+import safe_io  # noqa: E402
 
 PANEL = os.path.join(LOOP, 'backtest', 'panel_ohlc_2y.csv')
 UNIV = os.path.join(LOOP, 'etf_universe.csv')
@@ -262,7 +263,7 @@ def write_tracker(rows):
         w.writeheader()
         for r in sorted(rows, key=lambda x: x['date']):
             w.writerow({c: r.get(c, '') for c in COLS})
-    os.replace(tmp, TRACKER)
+    safe_io.safe_replace(tmp, TRACKER)  # 2026-11-01: 생 os.replace 대신 사후검증+롤백(§6)
 
 
 def record(D=None):

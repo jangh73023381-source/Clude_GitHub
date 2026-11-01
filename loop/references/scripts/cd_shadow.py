@@ -30,7 +30,8 @@ PANEL = os.path.join(LOOP, 'backtest', 'panel_ohlc_2y.csv')
 OUT = os.path.join(LOOP, 'references', 'cd_shadow.csv')
 COLS = ['date', 'sel_date', 'base_codes', 'cd_codes', 'base_ret', 'cd_ret',
         'bench_ret', 'base_excess', 'cd_excess', 'cd_minus_base', 'note']
-BENCH, POOL, COST = '069500', 15, 0.10      # 동결 파라미터 — 판정 전까지 변경 금지
+BENCH, POOL = '069500', 15      # 동결 파라미터 — 판정 전까지 변경 금지
+COST = 0.0  # 2026-11-01: v2.8(2026-08-14) 무비용 전환 때 누락됐던 곳 — CLAUDE.md §5 "채점 비용"대로 0으로 정정(이 스크립트는 종결된 Rule CD이지만 morning_run.py가 지금도 매일 호출한다)
 
 
 def load():

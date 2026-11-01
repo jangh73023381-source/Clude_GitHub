@@ -116,11 +116,14 @@ def dedupe_csv(path, keys):
         seen[tuple(r.get(k, '') for k in keys)] = r
     if len(seen) == len(rows):
         return 0
-    snapshot(path)
     tmp = path + '.tmp'
     with open(tmp, 'w', newline='', encoding='utf-8') as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         w.writerows(seen.values())
-    os.replace(tmp, path)
+    # 2026-11-01: 생 os.replace 대신 사후검증+롤백 있는 safe_replace 사용.
+    # dedupe는 설계상 행 수를 줄이는 것이 목적이므로 shrink_ok=0(축소 거부 없음) —
+    # 기본값 0.90을 쓰면 중복이 10%를 넘는 정상적인 dedupe(예: 15행→90행 중복을 15행으로
+    # 복원)가 "급감"으로 오판되어 거부된다. 완결성(looks_complete) 검증은 그대로 적용된다.
+    safe_replace(tmp, path, shrink_ok=0)
     return len(rows) - len(seen)

@@ -36,7 +36,7 @@ IL_TRACKER = os.path.join(LOOP, 'references', 'il_shadow.csv')
 
 BENCH = '069500'
 NPICK = 5
-COST = 0.0010
+COST = 0.0  # 2026-11-01: v2.8(2026-08-14) 무비용 전환 때 누락됐던 곳 — CLAUDE.md §5 "채점 비용"대로 0으로 정정(이 스크립트는 종결된 Rule DR/IL 계열이지만 morning_run.py가 지금도 매일 호출한다)
 DD_TH = -0.10      # 동결 — 낙폭 국면 임계
 ILZ_TH = 2.0       # 동결 — 비관 극단 임계
 LEV = ['122630', '233740']

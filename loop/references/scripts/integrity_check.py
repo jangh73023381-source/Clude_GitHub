@@ -43,6 +43,9 @@ ROW_SPEC = [
     ('references/stock15_oos_tracker.csv', 1, None),
     ('references/close_bet_band_tracker.csv', 1, None),
     ('references/mid_momentum_shadow.csv', 1, None),
+    ('references/rg_shadow.csv', 1, None),  # 2026-11-01: repair_data.py TRACKERS에는 있었으나 여기만 빠져 있던 것 등록
+    ('references/cd_shadow.csv', 1, None),  # 2026-11-01: 위와 동일 — Rule CD 종결 후에도 등록 누락 상태였음
+    ('references/sjh_tracker.csv', 1, None),  # 2026-11-01: Rule SJH 종결(2026-09-17)로 보관 중이나 양쪽 레지스트리 모두 미등록이었음
     ('references/tv_shadow.csv', 1, None),
     ('references/dr_shadow.csv', 1, None),
     ('references/il_shadow.csv', 1, None),

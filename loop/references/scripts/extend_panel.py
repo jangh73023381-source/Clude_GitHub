@@ -21,6 +21,7 @@ import pandas as pd
 LOOP_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, LOOP_DIR)
 import kiwoom_api as k  # noqa: E402
+from ensure_data import settled  # noqa: E402
 
 SCRIPTS = os.path.join(LOOP_DIR, "references", "scripts")
 
@@ -40,6 +41,14 @@ def main():
     base_path = a.base if os.path.isabs(a.base) else os.path.join(LOOP_DIR, a.base)
     want = [d.strip() for d in a.dates.split(",") if d.strip()]
     tag = want[-1]
+
+    # 2026-11-01: 미확정 봉 유입 금지(CLAUDE.md §6) — ensure_data.ensure() 경로를 거치지 않는
+    # 수동 직접 실행(이 스크립트의 공식 사용법)에서도 당일 미확정 종가가 패널에 섞이지 않게
+    # 호출자가 어떻든 여기서도 재검증한다.
+    unsettled = [d for d in want if not settled(d)]
+    if unsettled:
+        print(f"[거부] 미확정(미마감) 날짜 포함 — {unsettled} (16:00 KST 이후에만 확정)")
+        return 2
 
     base = pd.read_csv(base_path, dtype={"code": str})
     codes = base[["code", "name"]].drop_duplicates("code").reset_index(drop=True)
@@ -66,7 +75,13 @@ def main():
         merged = pd.concat([base, ext], ignore_index=True)
         merged = merged.drop_duplicates(subset=["code", "date"], keep="last")
         out = os.path.join(LOOP_DIR, "backtest", f"panel_close_{tag[4:]}.csv")
-        merged.to_csv(out, index=False)
+        tmp = out + ".tmp"
+        merged.to_csv(tmp, index=False)
+        if os.path.exists(out):
+            import safe_io
+            safe_io.safe_replace(tmp, out)  # 2026-11-01: 생 to_csv 직접 덮어쓰기 대신 §6 safe_replace
+        else:
+            os.rename(tmp, out)
         print(f"[완료] {out} — {merged.shape[0]}행 · {merged.code.nunique()}종 · "
               f"최종거래일 {merged.date.max()}")
         return 0

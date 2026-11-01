@@ -82,11 +82,15 @@ def refresh():
         except Exception:
             continue
     if add:
+        import safe_io
         tmp = CACHE + '.tmp'
         with open(tmp, 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=['date', 'foreign', 'kospi']); w.writeheader()
             for d in sorted(cache): w.writerow(cache[d])
-        os.replace(tmp, CACHE)
+        if os.path.exists(CACHE):
+            safe_io.safe_replace(tmp, CACHE)  # 2026-11-01: 생 os.replace 대신 §6 safe_replace
+        else:
+            os.rename(tmp, CACHE)
 
 
 def quant(v, q):

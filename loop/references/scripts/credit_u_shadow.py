@@ -64,12 +64,16 @@ def refresh():
     old = {r['date']: (int(r['deposit']), int(r['credit'])) for r in csv.DictReader(open(CACHE, encoding='utf-8'))}
     add = {d: v for d, v in new.items() if d not in old}
     if add:
+        import safe_io
         old.update(add)
         tmp = CACHE + '.tmp'
         with open(tmp, 'w', newline='', encoding='utf-8') as f:
             w = csv.writer(f); w.writerow(['date', 'deposit', 'credit'])
             for d in sorted(old): w.writerow([d, *old[d]])
-        os.replace(tmp, CACHE)
+        if os.path.exists(CACHE):
+            safe_io.safe_replace(tmp, CACHE)  # 2026-11-01: 생 os.replace 대신 §6 safe_replace
+        else:
+            os.rename(tmp, CACHE)
     return True
 
 

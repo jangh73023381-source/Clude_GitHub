@@ -17,6 +17,8 @@ import json
 import os
 import sys
 
+import safe_io
+
 H = os.path.dirname(os.path.abspath(__file__))
 REF = os.path.abspath(os.path.join(H, '..'))
 ROOT = os.path.abspath(os.path.join(REF, '..'))
@@ -151,10 +153,12 @@ def main():
 
     if added:
         existing.sort(key=lambda r: r['date'])
-        with open(TRACKER, 'w', newline='', encoding='utf-8') as f:
+        tmp = TRACKER + '.tmp'
+        with open(tmp, 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=FIELDS)
             w.writeheader()
             w.writerows(existing)
+        safe_io.safe_replace(tmp, TRACKER)
         print(f'\n{len(added)}행 기록 → {TRACKER}')
     return 0
 

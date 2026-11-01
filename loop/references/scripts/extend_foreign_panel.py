@@ -65,11 +65,17 @@ def main():
         for r in old + new:          # 신규가 뒤 → 같은 (code,date)는 신규로 덮인다
             merged[(r['code'], r['date'])] = r
         rows = sorted(merged.values(), key=lambda r: (r['code'], r['date']))
-        with open(PANEL, 'w', encoding='utf-8', newline='') as f:
+        tmp = PANEL + '.tmp'
+        with open(tmp, 'w', encoding='utf-8', newline='') as f:
             w = csv.DictWriter(f, fieldnames=FIELDS)
             w.writeheader()
             for r in rows:
                 w.writerow({k2: r.get(k2, '') for k2 in FIELDS})
+        if os.path.exists(PANEL):
+            import safe_io
+            safe_io.safe_replace(tmp, PANEL)  # 2026-11-01: 생 open(..,'w') 직접 덮어쓰기 대신 §6 safe_replace
+        else:
+            os.rename(tmp, PANEL)
         last = max(r['date'] for r in rows)
         print(f'[완료] {PANEL} — {len(rows)}행 · {len({r["code"] for r in rows})}종 · 최종일 {last}')
         return 0

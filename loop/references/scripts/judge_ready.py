@@ -31,6 +31,7 @@
 """
 import argparse
 import csv
+import math
 import os
 import statistics
 import sys
@@ -44,7 +45,12 @@ CAP = 60           # 이 이상은 기다리지 않고 '신뢰 낮음'으로 판
 def need(mean, sd):
     if not sd or not mean:
         return CAP
-    return max(FLOOR, min(CAP, round((Z90 * sd / abs(mean)) ** 2)))
+    # 2026-11-01: round() → math.ceil(). N*는 "90% 신뢰에 필요한 최소 표본 수"이므로
+    # 올림이 맞다 — round()는 경계값에서 필요 표본보다 적게 반올림해 목표 신뢰수준에
+    # 못 미친 상태로 '판정 가능'을 조기에 내릴 위험이 있다. 복제 세 곳
+    # (dual_score.py·stock15_picks.py·mid_momentum_shadow.py)은 이미 math.ceil()을 써서
+    # 정본과 어긋나 있었다 — 정본을 복제본에 맞춰 네 곳을 통일한다.
+    return max(FLOOR, min(CAP, math.ceil((Z90 * sd / abs(mean)) ** 2)))
 
 
 def jackknife_low(x):

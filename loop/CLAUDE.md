@@ -300,9 +300,12 @@ PIT · 국가별/품목×국가별)을 전부 검정해 모두 기각했다 — 
 보고서 `루프_코어새틀라이트_비용모형_검정_2026-08-14.docx`).
 
 - 상수 위치: `dual_score.py` · `combo_shadow_tracker.py` · `stock15_picks.py` ·
-  `mid_momentum_shadow.py` · `tv_shadow.py` · `backtest/bt_iter2_3_20260729.py` 의 `COST`.
-  **비용 정의를 바꿀 때는 이 여섯 곳을 함께 고친다.** `close_bet_record.py`(Rule CB)와
-  `rank_etf.py`(이진)는 원래 비용을 쓰지 않는다.
+  `mid_momentum_shadow.py` · `tv_shadow.py` · `backtest/bt_iter2_3_20260729.py` ·
+  `regime_shadow.py`(Rule DR·IL, 종결) · `cd_shadow.py`(Rule CD, 종결) 의 `COST`.
+  **비용 정의를 바꿀 때는 이 여덟 곳을 함께 고친다** — 2026-11-01까지 뒤 두 곳이 v2.8
+  전환에서 빠져 구버전 비용(각 0.0010·0.10)으로 계산되고 있었다(규칙이 종결돼도
+  `morning_run.py`가 여전히 매일 호출해 보고 수치에 들어간다 — 종결 규칙도 누락 여부를 확인할 것).
+  `close_bet_record.py`(Rule CB)와 `rank_etf.py`(이진)는 원래 비용을 쓰지 않는다.
 - **flat 비용은 선정을 바꾸지 않는다**(모든 후보에서 같은 상수를 뺀다). 바뀌는 것은 보고 수치와
   '평균 초과 > 0' 형태의 승격 조건이다.
 - **미해결** — 트랙 C(Rule SU)는 ETF가 아니라 개별종목이라 매도 시 증권거래세가 붙는다.

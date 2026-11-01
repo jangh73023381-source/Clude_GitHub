@@ -40,6 +40,7 @@ TRACKERS = [
     ('references/mid_momentum_shadow.csv', ('date',)),
     ('references/rg_shadow.csv', ('date',)),
     ('references/cd_shadow.csv', ('date',)),
+    ('references/sjh_tracker.csv', ('date',)),  # 2026-11-01: Rule SJH 종결(2026-09-17)로 보관 중이나 양쪽 레지스트리 모두 미등록이었음
     ('references/tv_shadow.csv', ('date',)),
     ('references/dr_shadow.csv', ('date',)),
     ('references/il_shadow.csv', ('date',)),

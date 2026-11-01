@@ -54,7 +54,7 @@ def build(path):
             '우선순위·청산에 반영하지 않는다. 표는 이미 정해진 종목의 집행(매수상단·손절선·비중)과 '
             '시황 서술에만 쓴다.', size=9.5)
 
-    for key in ['wallst', 'flow', 'foreign', 'entry', 'trade']:   # 2026-09-17 levels·sellban·sjh 폐지(CLAUDE.md 24번)
+    for key in ['wallst', 'flow', 'foreign', 'earn', 'entry', 'trade']:   # 2026-09-17 levels·sellban·sjh 폐지(CLAUDE.md 24번) · 2026-11-01 'earn'([1-6] 실적 이벤트 달력, 2026-10-28 신설) 발행 누락 추가
         it = 부록.ITEMS[key]
         p = doc.add_paragraph(); p.paragraph_format.space_before = Pt(14)
         p.paragraph_format.space_after = Pt(3)
