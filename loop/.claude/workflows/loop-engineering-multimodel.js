@@ -155,7 +155,7 @@ let iteration = 0
 let bestPicks = target.picks
 let bestScore = score
 let bannedList = []
-const MAX_ITER = 5
+const MAX_ITER = 10  // 2026-08-18 사용자 지시로 5→10 확대(CLAUDE.md §3-5)
 
 if (analysis.overall !== '달성') {
   while (iteration < MAX_ITER) {

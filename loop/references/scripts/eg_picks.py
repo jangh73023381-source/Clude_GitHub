@@ -129,7 +129,12 @@ def universe(p, asof):
 
 def liquid_top(p, asof, n=LIQ_MARK):
     """표시 전용 — 최근 거래대금 상위 n 종. 선정·우선순위에는 쓰지 않는다."""
-    r = p[(p.date <= asof) & (p.date >= asof - 300)]
+    # date가 YYYYMMDD 정수라 asof-300 같은 단순 산술은 연/월 경계에서 깨진다
+    # (예: asof=20260215 → 20259915는 실존하지 않는 날짜라 1~2월엔 룩백이 '올해 들어서부터'로
+    # 쪼그라든다). 실제 달력일 기준 300일 전으로 계산한다.
+    cutoff = int((pd.to_datetime(str(asof), format='%Y%m%d')
+                  - pd.Timedelta(days=300)).strftime('%Y%m%d'))
+    r = p[(p.date <= asof) & (p.date >= cutoff)]
     amt = r.groupby('code')[['volume', 'close']].apply(
         lambda d: (d.volume * d.close).mean()).sort_values(ascending=False)
     return set(amt.head(n).index)
