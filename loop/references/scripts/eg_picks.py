@@ -486,17 +486,20 @@ def main():
         print(f'   국면: KODEX200 {float(bp.close.iloc[-1]):,.0f} vs MA60 {bm60:,.0f} → '
               + ('**약세 — 종목당 비중 평소의 1/2**' if bear else '정상 비중'))
     free = max(0, K_SLOTS - len(hold))
-    print(f'   슬롯: {K_SLOTS} 중 보유 {len(hold)} → 여유 {free}. '
-          + (f'신호 {len(new)}건 > 여유 → 우선점수·섹터대표 순 상위 {free}건만 매수'
-             if len(new) > free else '신호 전부 동일가중(각 자본의 20%)'))
 
     # 섹터 중복 정리 — 같은 섹터는 우선점수 최고 1종만 행으로 내고 나머지는 비고로 넘긴다.
+    # (슬롯 경합은 실제로 표에 오르는 reps 단위다 — new 단위로 세면 같은 섹터 중복신호
+    #  때문에 여유가 있는데도 "부족"으로 잘못 경고할 수 있다. 2026-11-01 정정.)
     bysec = {}
     for x in sorted(new, key=lambda z: -z['score']):
         bysec.setdefault(x['sec'], []).append(x)
     reps = [x for x in sorted(new, key=lambda z: -z['score'])
             if x['code'] in set(sector_reps(new))]
     dup = len(new) - len(reps)
+
+    print(f'   슬롯: {K_SLOTS} 중 보유 {len(hold)} → 여유 {free}. '
+          + (f'매수 후보 {len(reps)}건(섹터 대표) > 여유 → 우선점수 순 상위 {free}건만 매수(아래 표에 표시)'
+             if len(reps) > free else '매수 후보 전부 동일가중(각 자본의 20%)'))
     print(f'\n■ 매수 — 신호 {len(new)}건'
           + (f' · 섹터 대표 {len(reps)}건(중복 {dup}건은 비고)' if dup else '')
           + ('  (우선순위 순)' if len(reps) > 1 else ''))
@@ -520,6 +523,15 @@ def main():
                   f"{x['flow']:>+9,.0f}{'통과' if x['flow_ok'] else '미달'}")
             if x['flow_ok'] is False:
                 note = ('**수급 미달 — 후순위(슬롯 여유 시에만)** · ' + note) if note else '**수급 미달 — 후순위(슬롯 여유 시에만)**'
+            if k > free:
+                # 2026-11-01: free(여유 슬롯)는 위에서 메시지로만 안내되고 표 자체에는
+                # 반영되지 않아, "상위 {free}건만 매수"라는 안내와 실제 표가 서로 다른
+                # 말을 하고 있었다(5슬롯 상한이 실제로는 아무 데도 적용되지 않음).
+                # 행 단위로 표시해 안내문과 표를 일치시킨다. 기록(record())의 buy_codes는
+                # eg_liq_shadow.py·sell_ban_list.py가 "그날 전체 신호"로 쓰므로 그대로 둔다
+                # — 바꾸는 건 표시뿐이고, 실제 매수 여부는 여전히 사용자 판단이다.
+                note = (f'**슬롯 부족 — 금일 매수 보류({k}위, 여유 {free})** · ' + note) if note \
+                    else f'**슬롯 부족 — 금일 매수 보류({k}위, 여유 {free})**'
             hs = (f"{str(x['h_ind']) + '/' + str(x['h_n']):>9s} {x['h_shr']:>+7.2f}% {win_ci(x):>13s} "
                   + (f"{x['h_mae_med']:>+6.1f}%" if x['h_n'] else f"{'—':>7s}"))
             print(f"   {k:>2d} {x['sec']:10s} {x['name'][:26]:28s} {x['code']:6s} {x['close']:>9,.0f}원 "
