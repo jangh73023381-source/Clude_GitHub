@@ -1,0 +1,15 @@
+# 비밀키·토큰 (절대 올리지 않음)
+*.txt
+.kiwoom_token*.json
+*apikey*
+*secret*
+# 개인 보유 현황
+current-holdings*
+# 산출물·임시·백업
+*.docx
+*.pdf
+*.tmp
+*.bak*
+.~lock*
+__pycache__/
+node_modules/
