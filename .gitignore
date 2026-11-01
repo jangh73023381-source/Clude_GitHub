@@ -16,3 +16,6 @@ node_modules/
 # Claude Code 세션 도구(격리 worktree 등) — 프로젝트 콘텐츠 아님.
 # 루트에만 적용(앞의 /) — loop/.claude/(검증관 에이전트·워크플로, 추적 대상)는 건드리지 않는다.
 /.claude/
+
+# 개인 자료 폴더는 문서 그대로 보관
+!personal/**
