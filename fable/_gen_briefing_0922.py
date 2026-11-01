@@ -2,8 +2,11 @@
 # 데일리브리핑 2026-09-22 — 헤더 헬퍼는 _gen_briefing_0814.py 1~142행을 그대로 재사용
 # fable CLAUDE.md 24번: [8-1]·[8-3]·[8-4] 폐지 → 호출하지 않는다.
 # fable CLAUDE.md 25번: [6-3]에 편입일·만기(D+20)·잔여 열 포함.
-exec(open('_gen_briefing_0814.py', encoding='utf-8').read().split(
-    '# -*- coding: utf-8 -*-\n# 데일리브리핑 2026-08-14 본문')[0])
+from briefing_core import (
+    doc, title, section, subsection, para, note, labelpara, bullet,
+    make_table, px, band, shade, add_run, set_table_borders,
+    FONT, NAVY, GREEN_TXT, RED_TXT,
+)  # 2026-11-01: exec(open('_gen_briefing_0814.py',...)) 임시방편 제거 — briefing_core.py 표준 import로 교체
 
 import importlib.util as _il
 import json as _json

@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # 트랙 D · Rule EG 매수·매도 타점 검토 보고서 — 2026-09-03 (헤더 헬퍼는 _gen_briefing_0814.py 재사용)
-exec(open('_gen_briefing_0814.py', encoding='utf-8').read().split(
-    '# -*- coding: utf-8 -*-\n# 데일리브리핑 2026-08-14 본문')[0])
+from briefing_core import (
+    doc, title, section, subsection, para, note, labelpara, bullet,
+    make_table, px, band, shade, add_run, set_table_borders,
+    FONT, NAVY, GREEN_TXT, RED_TXT,
+    qn, OxmlElement, RGBColor,  # 2026-11-01: 이 파일의 로컬 make_table/add_run 오버라이드가 직접 씀
+)  # 2026-11-01: exec(open('_gen_briefing_0814.py',...)) 임시방편 제거 — briefing_core.py 표준 import로 교체
 
 # ---- 이 보고서 전용 보강: **굵게** 마크업 파싱 + 열 너비 적용 (템플릿 원본은 건드리지 않음)
 from docx.shared import Twips as _Tw

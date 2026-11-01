@@ -3,8 +3,11 @@
 # 2026-09-05 사용자 지시 반영: 7절(단일종목 추천) 폐지·번호 결번 / 11절(면책 고지) 폐지
 # 2026-09-08 신설(19번 규칙): [1-3] 미국장 전이 참고표 — 1절 세 번째 소제목
 # v2 (2026-09-11 사용자 요청): 9절에 신뢰도 지표(7번 ⑧·⑨) 반영 — ③-2 보유 흔들림 점검 · ⑤ 신뢰도 기준선 + [8-3] 매수 금지 목록(20번). 나머지 절은 v1과 동일
-exec(open('_gen_briefing_0814.py', encoding='utf-8').read().split(
-    '# -*- coding: utf-8 -*-\n# 데일리브리핑 2026-08-14 본문')[0])
+from briefing_core import (
+    doc, title, section, subsection, para, note, labelpara, bullet,
+    make_table, px, band, shade, add_run, set_table_borders,
+    FONT, NAVY, GREEN_TXT, RED_TXT,
+)  # 2026-11-01: exec(open('_gen_briefing_0814.py',...)) 임시방편 제거 — briefing_core.py 표준 import로 교체
 
 import importlib.util as _il
 import json as _json

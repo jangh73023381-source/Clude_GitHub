@@ -4,8 +4,11 @@
 # 2026-09-08 신설(19번): [1-3] 미국장 전이 참고표 — 1절 세 번째 소제목
 # 2026-09-11 신설(20번): [8-3] 매수 금지 목록
 # 2026-09-12 신설(21번): [8-4] 송재호식 참고표 / (22번) 각주 상설 부록 분리 / (23번) 10절 표 형식
-exec(open('_gen_briefing_0814.py', encoding='utf-8').read().split(
-    '# -*- coding: utf-8 -*-\n# 데일리브리핑 2026-08-14 본문')[0])
+from briefing_core import (
+    doc, title, section, subsection, para, note, labelpara, bullet,
+    make_table, px, band, shade, add_run, set_table_borders,
+    FONT, NAVY, GREEN_TXT, RED_TXT,
+)  # 2026-11-01: exec(open('_gen_briefing_0814.py',...)) 임시방편 제거 — briefing_core.py 표준 import로 교체
 
 import importlib.util as _il
 import json as _json

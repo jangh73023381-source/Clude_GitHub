@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # 데일리브리핑 2026-09-29(화) — 9/28 생성기 구조 재사용 (D=20260928, new_target=true 검증관 직접 수행)
 # fable CLAUDE.md 24번: [8-1]·[8-3]·[8-4] 폐지 → 호출하지 않는다. 25번: [6-3] 편입일·만기·잔여. 26번: 1쪽 요약.
-exec(open('_gen_briefing_0814.py', encoding='utf-8').read().split(
-    '# -*- coding: utf-8 -*-\n# 데일리브리핑 2026-08-14 본문')[0])
+from briefing_core import (
+    doc, title, section, subsection, para, note, labelpara, bullet,
+    make_table, px, band, shade, add_run, set_table_borders,
+    FONT, NAVY, GREEN_TXT, RED_TXT,
+)  # 2026-11-01: exec(open('_gen_briefing_0814.py',...)) 임시방편 제거 — briefing_core.py 표준 import로 교체
 
 _add_run_orig = add_run
 

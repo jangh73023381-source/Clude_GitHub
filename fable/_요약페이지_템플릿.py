@@ -134,7 +134,7 @@ def _apply_widths(t, widths):
     from docx.oxml.ns import qn
     from docx.shared import Twips
     t.autofit = False
-    tot = sum(widths); sc = min(1.0, 10400 / tot)
+    tot = sum(widths); sc = min(1.0, 10400 / tot) if tot else 1.0  # widths가 빈 리스트면 0으로 나누지 않는다
     pr = t._tbl.tblPr
     for el in pr.findall(qn('w:tblLayout')):      # autofit 흔적 제거 후 fixed 하나만 둔다
         pr.remove(el)
@@ -232,10 +232,15 @@ def add_summary_page(state_path, picks, gates, exec_date, para, make_table, note
     ms = S['mid_status']
     # 한 장에 넣기 위해 가로형(5열)으로 싣는다: 열 = 순위, 1행 = 종목(코드), 2행 = 구분
     mids = S['mid5'][:5]
-    _tbl(make_table, [f'{i}위' for i in range(1, len(mids) + 1)],
-         [[f"{m['name']} ({m['code']})" for m in mids],
-          [ms.get(m['code'], '—') for m in mids]],
-         [2080] * len(mids))
+    if mids:
+        _tbl(make_table, [f'{i}위' for i in range(1, len(mids) + 1)],
+             [[f"{m['name']} ({m['code']})" for m in mids],
+              [ms.get(m['code'], '—') for m in mids]],
+             [2080] * len(mids))
+    else:
+        # 2026-11-01: mids가 비면 열 수(=len(mids))가 0이 돼 _apply_widths의
+        # sum(widths)=0으로 ZeroDivisionError가 났다(중기 후보 0건인 날 요약 페이지 전체가 죽음).
+        note('중기 추천 없음', size=9.5)
     if S['mid_exit']:
         note('※ 중기 청산: ' + ', '.join(f'{n}({c})' for c, n in S['mid_exit'])
              + ' — 추천 탈락, 첫 브리핑일 종가 청산.', size=8.5)
